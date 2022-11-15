@@ -15,7 +15,7 @@ with open('requirements.txt') as f:
 setup(
     name='frappe_better_list_view',
     version=version,
-    description='Frappe list view that allows setting the number of rows per page and the list of fields to fetch without displaying their values.',
+    description='Frappe list view that allows setting the number of rows per page and fetching a list of fields without displaying their values.',
     author='Ameen Ahmed (Level Up)',
     author_email='kid1194@gmail.com',
     packages=find_packages(),

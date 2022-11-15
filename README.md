@@ -1,8 +1,8 @@
 # Frappe Better List View
 
-A small plugin for Frappe modifies the list view to allow:
+A small plugin for Frappe that modifies the list view to allow:
 1. Setting the number of rows displayed per page
-2. The list of fields to fetch without displaying their values
+2. fetching a list of fields without displaying their values
 
 ```
 frappe.listview_settings['DocType'] = {
