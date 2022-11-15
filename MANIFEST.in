@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include frappe_better_list_view *.css
+recursive-include frappe_better_list_view *.csv
+recursive-include frappe_better_list_view *.html
+recursive-include frappe_better_list_view *.ico
+recursive-include frappe_better_list_view *.js
+recursive-include frappe_better_list_view *.json
+recursive-include frappe_better_list_view *.md
+recursive-include frappe_better_list_view *.png
+recursive-include frappe_better_list_view *.py
+recursive-include frappe_better_list_view *.svg
+recursive-include frappe_better_list_view *.txt
+recursive-exclude frappe_better_list_view *.pyc

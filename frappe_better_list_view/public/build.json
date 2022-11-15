@@ -1,0 +1,5 @@
+{
+  "frappe_better_list_view/js/better_list_view.js": [
+    "public/js/better_list_view.bundle.js"
+  ]
+}

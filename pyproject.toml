@@ -1,0 +1,22 @@
+[project]
+name = "frappe_better_list_view"
+authors = [
+    {name = "Ameen Ahmed (Level Up)", email = "kid1194@gmail.com"}
+]
+description = "Frappe list view that allows setting the number of rows per page and the list of fields to fetch without displaying their values."
+keywords = ["frappe", "list view", "better list view"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: JavaScript"
+]
+requires-python = ">=3.6"
+readme = "README.md"
+dynamic = ["version"]
+dependencies = [
+    "frappe>=12.0.0"
+]
+
+[project.urls]
+Documentation = "https://github.com/kid1194/frappe-better-list-view"
+Source = "https://github.com/kid1194/frappe-better-list-view"
