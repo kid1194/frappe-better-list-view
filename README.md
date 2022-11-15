@@ -168,7 +168,7 @@ The list of fields to fetch without displaying their values
 ---
 
 ### Issues
-If you find bug in the plugin, please create a [bug report](https://github.com/kid1194/frappe-better-list-view/issues/new?assignees=&labels=&template=bug_report.md&title=) and let us know about it.
+If you find bug in the plugin, please create a [bug report](https://github.com/kid1194/frappe-better-list-view/issues/new?assignees=kid1194&labels=bug&template=bug_report.md&title=%5BBUG%5D) and let us know about it.
 
 ---
 
