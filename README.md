@@ -1,36 +1,9 @@
 # Frappe Better List View
 
-A small plugin for Frappe that modifies the list view to allow:
-1. Setting the number of rows displayed per page
-2. Fetching a list of fields without displaying their values
-
-```
-frappe.listview_settings['DocType'] = {
-    // Only 50 rows will be displayed per page
-    page_length: 50,
-    // No columns will be created for these fields  
-    get_fields: ['is_approved', 'is_paid'],
-    // The fields listed above can be used inside the following functions
-    get_indicator: function(doc) {
-        if (doc.is_paid) {
-            return [__('Paid'), 'blue', 'is_paid,=,Yes|is_approved,=,Yes'];
-        }
-        if (doc.is_approved) {
-            return [__('Approved'), 'green', 'is_paid,=,No|is_approved,=,Yes'];
-        }
-        return [__('Pending'), 'gray', 'is_paid,=,No|is_approved,=,No'];
-    },
-    formatters: {
-        name: function(value, field, doc) {
-            let html = value;
-            if (doc.is_approved) {
-                html += ' <span class="fa fa-check"></span>';
-            }
-            return html;
-        },
-    },
-};
-```
+A small **Frappe** list view plugin that allows the following modifications:
+1. Setting additional fields to fetch without displaying their values
+1. Setting additional filters in the data query 
+3. Setting the number of rows to display per page
 
 ---
 
@@ -41,6 +14,7 @@ frappe.listview_settings['DocType'] = {
   - [Update](#update)
   - [Uninstall](#uninstall)
 - [Available Options](#available-options)
+- [Example](#example)
 - [Issues](#issues)
 - [License](#license)
 
@@ -86,7 +60,7 @@ bench build --app frappe_better_list_view
 bench --site [sitename] install-app frappe_better_list_view
 ```
 
-5. Check the usage section below
+5. Check the [Available Options](#available-options) and [Example](#example)
 
 #### Update
 1. Go to app directory
@@ -153,17 +127,56 @@ bench restart
 ---
 
 ### Available Options
-1. `page_length`
 
-The number of rows to display per page
-- Type: `Integer`
-- Example: `50`
+⚠️ *Important* ⚠️
 
-2. `get_fields`
+*All the following options must be placed inside the* `query` *object. Check the* [Example](#example) *below.*
 
-The list of fields to fetch without displaying their values
-- Type: `Array`
-- Example: `['currency', 'exchange_rate']`
+| Option | Description |
+| :--- | :--- |
+| `fields` | The additional list of fields to fetch without displaying their values.<br/><br/>Type: `Array`<br/>Example: `['is_approved', 'is_paid']` |
+| `filters` | The additional filter conditions to customize the data fetched.<br/><br/>Type: `Object` or `Array`<br/>Example: `{is_approved: 1, is_paid: 0}` or `[['is_approved', '=', 1], ['is_paid', '=', 0]]` |
+| `page_length` | The number of rows to display per page.<br/><br/>Type: `Integer`<br/>Example: `50` |
+
+---
+
+### Example
+
+```
+frappe.listview_settings['DocType'] = {
+    // The query modification
+    query: {
+        // No columns will be created for these fields
+        fields: ['is_approved', 'is_paid'],
+        // Additional filters (array or object) to customize query
+        filters: {
+            is_approved: 1,
+            is_paid: 1,
+        },
+        // Only 50 rows will be displayed per page
+        page_length: 50,
+    },
+    // The fields listed above can be used inside the following functions
+    get_indicator: function(doc) {
+        if (doc.is_paid) {
+            return [__('Paid'), 'blue', 'is_paid,=,Yes|is_approved,=,Yes'];
+        }
+        if (doc.is_approved) {
+            return [__('Approved'), 'green', 'is_paid,=,No|is_approved,=,Yes'];
+        }
+        return [__('Pending'), 'gray', 'is_paid,=,No|is_approved,=,No'];
+    },
+    formatters: {
+        name: function(value, field, doc) {
+            let html = value;
+            if (doc.is_approved) {
+                html += ' <span class="fa fa-check"></span>';
+            }
+            return html;
+        },
+    },
+};
+```
 
 ---
 

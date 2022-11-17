@@ -3,7 +3,7 @@ name = "frappe_better_list_view"
 authors = [
     {name = "Ameen Ahmed (Level Up)", email = "kid1194@gmail.com"}
 ]
-description = "Frappe list view that allows setting the number of rows per page and fetching a list of fields without displaying their values."
+description = "Frappe list view plugin that allows modification."
 keywords = ["frappe", "list view", "better list view"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
