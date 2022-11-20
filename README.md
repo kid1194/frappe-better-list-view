@@ -4,6 +4,7 @@ A small **Frappe** list view plugin that allows the following modifications:
 1. Setting additional fields to fetch without displaying their values
 1. Setting additional filters in the data query 
 3. Setting the number of rows to display per page
+4. Setting parser function to modify row values on time
 
 ---
 
