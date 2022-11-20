@@ -12,7 +12,7 @@ frappe.views.ListView = class ListView extends frappe.views.ListView {
     get_args() {
         var args = super.get_args();
         if ($.isPlainObject(this.settings.query)) {
-            if (Array.isArray(this.settings.query.fields)) {
+            if ($.isArray(this.settings.query.fields)) {
                 for (var i in this.settings.query.fields) {
                     var field = frappe.model.get_full_column_name(
                         this.settings.query.fields[i],
@@ -25,12 +25,12 @@ frappe.views.ListView = class ListView extends frappe.views.ListView {
             }
             if (
                 $.isPlainObject(this.settings.query.filters)
-                || Array.isArray(this.settings.query.filters)
+                || $.isArray(this.settings.query.filters)
             ) {
                 var get_query_filter = function(doctype, cond, column) {
                     var sign = '=',
                     value = cond;
-                    if (Array.isArray(cond)) {
+                    if ($.isArray(cond)) {
                         var len = cond.length;
                         if (len < 2) return null;
                         var i = 0;
@@ -56,5 +56,36 @@ frappe.views.ListView = class ListView extends frappe.views.ListView {
             }
         }
         return args;
+    }
+    render_list() {
+        if (
+            !this._inside_parser
+            && this.settings.query.parser
+            && typeof this.settings.query.parser === 'function'
+        ) {
+            var me = this,
+            tasks = [];
+            $.each(this.data, function(i, row) {
+                tasks.push(new Promise(function(resolve, reject) {
+                    try {
+                        me.settings.query.parser(row, resolve);
+                    } catch(e) {
+                        reject(e);
+                    }
+                }));
+            });
+            if (tasks.length) {
+                var render = function() {
+                    me._inside_parser = true;
+                    me.render_list();
+                    me._inside_parser = false;
+                };
+                Promise.all(tasks)
+                .catch(render)
+                .finally(render);
+                return;
+            }
+        }
+        super.render_list();
     }
 };

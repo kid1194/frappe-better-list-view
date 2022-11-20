@@ -137,6 +137,7 @@ bench restart
 | `fields` | The additional list of fields to fetch without displaying their values.<br/><br/>Type: `Array`<br/>Example: `['is_approved', 'is_paid']` |
 | `filters` | The additional filter conditions to customize the data fetched.<br/><br/>Type: `Object` or `Array`<br/>Example: `{is_approved: 1, is_paid: 0}` or `[['is_approved', '=', 1], ['is_paid', '=', 0]]` |
 | `page_length` | The number of rows to display per page.<br/><br/>Type: `Integer`<br/>Example: `50` |
+| `parser` | The function that modifies row values on time. Must call `resolve()` after modification is done.<br/><br/>Type: `Function`<br/>Parameter: `row, resolve`<br/>Example: Check both ways listed in the [example](#example) code below  |
 
 ---
 
@@ -144,18 +145,38 @@ bench restart
 
 ```
 frappe.listview_settings['DocType'] = {
-    // The query modification
+    // The list view modifications
     query: {
+    
         // No columns will be created for these fields
         fields: ['is_approved', 'is_paid'],
+        
         // Additional filters (array or object) to customize query
         filters: {
             is_approved: 1,
             is_paid: 1,
         },
+        
         // Only 50 rows will be displayed per page
         page_length: 50,
+        
+        // The function that modifies row values using one of the following ways
+        parser: function(row, resolve) {
+            
+            // 1. Simply change row values directly 
+            row.actual_qty = 10;
+            resolve();
+            
+            // 2. Query db and modify row value
+            frappe.db.get_value('DocType', row.name, 'actual_qty')
+            .then(function(ret) {
+                if (ret && $.isPlainObjecr(ret)) ret = ret.message || ret;
+                row.actual_qty = ret;
+                resolve();
+            });
+        },
     },
+    
     // The fields listed above can be used inside the following functions
     get_indicator: function(doc) {
         if (doc.is_paid) {
