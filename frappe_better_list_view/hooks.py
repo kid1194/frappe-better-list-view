@@ -19,10 +19,13 @@ app_license = "MIT"
 
 
 is_frappe_above_v13 = int(frappe_version.split('.')[0]) > 13
+is_frappe_above_v12 = int(frappe_version.split('.')[0]) > 12
 
 
 app_include_js = [
     'better_list_view.bundle.js'
-] if is_frappe_above_v13 else [
+] if is_frappe_above_v13 else ([
     '/assets/frappe_better_list_view/js/better_list_view.js'
-]
+] if is_frappe_above_v12 else [
+    '/assets/frappe_better_list_view/js/better_list_view_v12.js'
+])

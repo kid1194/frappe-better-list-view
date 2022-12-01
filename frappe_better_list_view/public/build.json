@@ -1,5 +1,8 @@
 {
   "frappe_better_list_view/js/better_list_view.js": [
     "public/js/better_list_view.bundle.js"
+  ],
+  "frappe_better_list_view/js/better_list_view_v12.js": [
+    "public/js/better_list_view_v12.bundle.js"
   ]
 }
