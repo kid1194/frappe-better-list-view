@@ -196,7 +196,10 @@ Function to set the background color of row.
 
 **Return:** `String`, `Null`
 
-**Colors:** `active`, `primary`, ``, ``, ``, ``, ``, ``
+**Colors:**
+<div style="width:100%;text-align:center">
+    <img src="https://github.com/kid1194/frappe-better-list-view/blob/main/images/row_bg.png?raw=true" alt="Frappe Better List View"/>
+</div>
 
 **Examples:**
 ```
