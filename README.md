@@ -1,10 +1,6 @@
 # Frappe Better List View
 
-A small **Frappe** list view plugin that allows the following modifications:
-1. Setting additional fields to fetch without displaying their values
-1. Setting additional filters in the data query 
-3. Setting the number of rows to display per page
-4. Setting parser function to modify row values on time
+A small **Frappe** list view plugin that allows the customization.
 
 ---
 
@@ -128,17 +124,89 @@ bench restart
 ---
 
 ### Available Options
+### 1. `query_fields`
 
-⚠️ *Important* ⚠️
+List of additional fields to fetch but not display.
 
-*All the following options must be placed inside the* `query` *object. Check the* [Example](#example) *below.*
+**Example:**
+```
+['is_approved', 'is_paid']
+```
 
-| Option | Description |
-| :--- | :--- |
-| `fields` | The additional list of fields to fetch without displaying their values.<br/><br/>Type: `Array`<br/>Example: `['is_approved', 'is_paid']` |
-| `filters` | The additional filter conditions to customize the data fetched.<br/><br/>Type: `Object` or `Array`<br/>Example: `{is_approved: 1, is_paid: 0}` or `[['is_approved', '=', 1], ['is_paid', '=', 0]]` |
-| `page_length` | The number of rows to display per page.<br/><br/>Type: `Integer`<br/>Example: `50` |
-| `parser` | The function that modifies row values on time. Must call `resolve()` after modification is done.<br/><br/>Type: `Function`<br/>Parameter: `row, resolve`<br/>Example: Check both ways listed in the [example](#example) code below  |
+### 2. `query_filters`
+
+List of additional filters for the fetch query.
+
+**Example:**
+```
+{is_approved: 1, is_paid: 0}
+```
+--OR--
+```
+[['is_approved', '=', 1], ['is_paid', '=', 0]]
+```
+
+### 3. `page_length`
+
+Number of rows to display per page.
+
+**Example:**
+```
+50
+```
+
+### 4. `parser`
+
+Function to modify the list data before display.
+
+**Arguments:** `data`, `render`
+
+**Must call** `render()` **after modification is done to render the list.**
+
+**Examples:**
+```
+function(data, render) {
+    let names = [];
+    data.forEach(function(row) {
+        names.push(row.name);
+    });
+    frappe.db.get_list('Doctype', {
+        fields: ['name', 'value'],
+        filters: {
+            name: ['in', names],
+        }
+    }).then(function(list) {
+        list.forEach(function(vals) {
+            data.forEach(function(row) {
+                if (vals.name === row.name) {
+                    row.value = vals.value;
+                }
+            });
+        });
+        render();
+    });
+}
+```
+
+### 5. `set_row_background`
+
+Function to set the background color of row.
+
+**Arguments:** `row`
+
+**Return:** `String`, `Null`
+
+**Colors:** `active`, `primary`, ``, ``, ``, ``, ``, ``
+
+**Examples:**
+```
+function(row) {
+    if (cint(row.cost) > 1000) return 'danger';
+    if (cint(row.cost) > 800) return 'warning';
+    if (cint(row.cost) > 600) return 'info';
+    if (cint(row.cost) < 300) return 'success';
+}
+```
 
 ---
 
@@ -146,37 +214,50 @@ bench restart
 
 ```
 frappe.listview_settings['DocType'] = {
-    // The list view modifications
-    query: {
+    --------------------------------------------------------------------
+    --- Plugin Options -------------------------------------------------
+    --------------------------------------------------------------------
     
-        // No columns will be created for these fields
-        fields: ['is_approved', 'is_paid'],
-        
-        // Additional filters (array or object) to customize query
-        filters: {
-            is_approved: 1,
-            is_paid: 1,
-        },
-        
-        // Only 50 rows will be displayed per page
-        page_length: 50,
-        
-        // The function that modifies row values using one of the following ways
-        parser: function(row, resolve) {
-            
-            // 1. Simply change row values directly 
-            row.actual_qty = 10;
-            resolve();
-            
-            // 2. Query db and modify row value
-            frappe.db.get_value('DocType', row.name, 'actual_qty')
-            .then(function(ret) {
-                if (ret && $.isPlainObjecr(ret)) ret = ret.message || ret;
-                row.actual_qty = ret;
-                resolve();
-            });
-        },
+    // Columns to fetch but not display
+    query_fields: ['is_approved', 'is_paid'],
+    // Additional filters (array or object) for fetch query
+    query_filters: {
+        is_approved: 1,
+        is_paid: 1,
     },
+    // Only 50 rows will be displayed per page
+    page_length: 50,
+    // List data modify function 
+    parser: function(data, render) {
+        let names = [];
+        data.forEach(function(row) {
+            names.push(row.name);
+        });
+        if (!names.length) {
+            return render();
+        }
+        frappe.db.get_list('Doctype', {
+            fields: ['name', 'price'],
+            filters: {
+                name: ['in', names],
+                is_approved: 1,
+            }
+        }).then(function(list) {
+            list.forEach(function(vals) {
+                data.forEach(function(row) {
+                    if (vals.name === row.name) {
+                        row.price = vals.price;
+                    }
+                });
+            });
+            render();
+        });
+    },
+    set_row_background: function(row) {
+        if (!cint(row.is_approved)) return 'info';
+    },
+    
+    --------------------------------------------------------------------
     
     // The fields listed above can be used inside the following functions
     get_indicator: function(doc) {
