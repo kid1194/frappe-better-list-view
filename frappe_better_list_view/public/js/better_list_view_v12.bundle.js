@@ -6,11 +6,13 @@
 */
 
 
-frappe.provide('frappe.views');
-
 frappe.views.ListView = class ListView extends frappe.views.ListView {
     get_args() {
         var args = super.get_args();
+        if (!args.doctype || args.doctype !== this.doctype) {
+            frappe.throw(__('Invalid list args.'));
+            return args;
+        }
         if (
             $.isArray(this.settings.query_fields)
             && this.settings.query_fields.length
@@ -20,9 +22,8 @@ frappe.views.ListView = class ListView extends frappe.views.ListView {
                     this.settings.query_fields[i],
                     this.doctype
                 );
-                if (args.fields.indexOf(field) < 0) {
+                if (args.fields.indexOf(field) < 0)
                     args.fields.push(field);
-                }
             }
         }
         if (
@@ -38,9 +39,9 @@ frappe.views.ListView = class ListView extends frappe.views.ListView {
                 let sign = '=',
                 value = cond;
                 if ($.isArray(cond)) {
-                    let len = cond.length;
-                    if (len < 2) return null;
-                    let i = 0;
+                    let len = cond.length,
+                    i = 0;
+                    if (len < 2) return;
                     if (len > 2) column = cond[i++];
                     sign = cond[i++];
                     value = cond[i++];
@@ -53,9 +54,8 @@ frappe.views.ListView = class ListView extends frappe.views.ListView {
                     this.settings.query_filters[key],
                     key
                 );
-                if (cond && args.filters.indexOf(cond) < 0) {
+                if (cond && args.filters.indexOf(cond) < 0)
                     args.filters.push(cond);
-                }
             }
         }
         if (cint(this.settings.page_length)) {
@@ -69,16 +69,15 @@ frappe.views.ListView = class ListView extends frappe.views.ListView {
         }
         if (!this._parsed_list && $.isFunction(this.settings.parser)) {
             var me = this;
-            let renderer = function() {
-                if (me._parsed_list) return;
-                me._parsed_list = 1;
-                me.render();
-            };
             (new Promise(function(resolve, reject) {
                 try {
                     me.settings.parser(me.data, resolve);
                 } catch(e) { reject(e); }
-            })).catch(renderer).finally(renderer);
+            })).finally(function() {
+                if (me._parsed_list) return;
+                me._parsed_list = 1;
+                me.render();
+            });
             return;
         }
         super.render();
