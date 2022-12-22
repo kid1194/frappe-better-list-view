@@ -35,11 +35,11 @@ frappe.views.ListView = class ListView extends frappe.views.ListView {
                 && this.settings.query_filters.length
             )
         ) {
-            let get_query_filter = function(doctype, cond, column) {
-                let sign = '=',
+            var get_query_filter = function(doctype, cond, column) {
+                var sign = '=',
                 value = cond;
                 if ($.isArray(cond)) {
-                    let len = cond.length,
+                    var len = cond.length,
                     i = 0;
                     if (len < 2) return;
                     if (len > 2) column = cond[i++];
@@ -48,8 +48,8 @@ frappe.views.ListView = class ListView extends frappe.views.ListView {
                 }
                 return [doctype, column, sign, value];
             };
-            for (let key in this.settings.query_filters) {
-                let cond = get_query_filter(
+            for (var key in this.settings.query_filters) {
+                var cond = get_query_filter(
                     this.doctype,
                     this.settings.query_filters[key],
                     key
@@ -83,16 +83,25 @@ frappe.views.ListView = class ListView extends frappe.views.ListView {
         super.render();
     }
     get_list_row_html(doc) {
-        let html = super.get_list_row_html(doc);
+        var html = super.get_list_row_html(doc);
         if (!$.isFunction(this.settings.set_row_background)) return html;
-        let css = 'level list-row',
-        color = this.settings.set_row_background(doc);
-        if (color && [
+        var color = this.settings.set_row_background(doc);
+        if (!color || Object.prototype.toString.call(color) !== '[object String]') return html;
+        var row = $('<div>').append(html),
+        list_row = $($(html.children()[0]).children()[0]);
+        if ([
             'active', 'primary', 'secondary', 'success',
             'danger', 'warning', 'info',
         ].indexOf(color) >= 0) {
-            html = html.replace(css, css + ' table-' + color);
+            list_row.addClass('table-' + color);
+        } else if (
+            (color[0] === '#' && color.length >= 4)
+            || (color.substring(0, 3).toLowerCase() === 'rgb')
+            || (color.substring(0, 4).toLowerCase() === 'hsla')
+        ) {
+            list_row.css('background-color', color);
         }
+        html = row.html();
         return html;
     }
 };

@@ -190,13 +190,13 @@ function(data, render) {
 
 ### 5. `set_row_background`
 
-Function to set the background color of row.
+Function to set the background color of row, (css, hex, rgb, rgba, hsla).
 
 **Arguments:** `row`
 
 **Return:** `String`, `Null`
 
-**Colors:**
+**CSS Colors:**
 <div style="width:100%;text-align:center">
     <img src="https://github.com/kid1194/frappe-better-list-view/blob/main/images/row_bg.png?raw=true" alt="Frappe Better List View"/>
 </div>
@@ -205,9 +205,9 @@ Function to set the background color of row.
 ```
 function(row) {
     if (cint(row.cost) > 1000) return 'danger';
-    if (cint(row.cost) > 800) return 'warning';
-    if (cint(row.cost) > 600) return 'info';
-    if (cint(row.cost) < 300) return 'success';
+    if (cint(row.cost) > 800) return '#ffeeba';
+    if (cint(row.cost) > 600) return 'rgba(190,229,235,1)';
+    if (cint(row.cost) < 300) return 'hsla(133.7,41.2%,83.3%,1)';
 }
 ```
 
