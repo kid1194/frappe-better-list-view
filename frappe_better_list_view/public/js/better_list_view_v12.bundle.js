@@ -87,21 +87,19 @@ frappe.views.ListView = class ListView extends frappe.views.ListView {
         if (!$.isFunction(this.settings.set_row_background)) return html;
         var color = this.settings.set_row_background(doc);
         if (!color || Object.prototype.toString.call(color) !== '[object String]') return html;
-        var row = $('<div>').append(html),
-        list_row = $($(html.children()[0]).children()[0]);
+        var css = 'level list-row';
         if ([
             'active', 'primary', 'secondary', 'success',
             'danger', 'warning', 'info',
         ].indexOf(color) >= 0) {
-            list_row.addClass('table-' + color);
+            html = html.replace(css, css + ' table-' + color);
         } else if (
             (color[0] === '#' && color.length >= 4)
             || (color.substring(0, 3).toLowerCase() === 'rgb')
             || (color.substring(0, 4).toLowerCase() === 'hsla')
         ) {
-            list_row.css('background-color', color);
+            html = html.replace(css, css + '" style="background-color:' + color);
         }
-        html = row.html();
         return html;
     }
 };

@@ -4,4 +4,4 @@
 # Licence: Please refer to LICENSE file
 
 
-__version__ = "1.3.2"
+__version__ = "1.3.3"
