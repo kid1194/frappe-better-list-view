@@ -124,7 +124,7 @@ bench restart
 ---
 
 ### Available Options
-### 1. `query_fields`
+#### 1. `query_fields`
 
 List of additional fields to fetch but not display.
 
@@ -133,7 +133,7 @@ List of additional fields to fetch but not display.
 ['is_approved', 'is_paid']
 ```
 
-### 2. `query_filters`
+#### 2. `query_filters`
 
 List of additional filters for the fetch query.
 
@@ -146,7 +146,7 @@ List of additional filters for the fetch query.
 [['is_approved', '=', 1], ['is_paid', '=', 0]]
 ```
 
-### 3. `page_length`
+#### 3. `page_length`
 
 Number of rows to display per page.
 
@@ -155,17 +155,20 @@ Number of rows to display per page.
 50
 ```
 
-### 4. `parser`
+#### 4. `parser`
 
 Function to modify the list data before display.
 
-**Arguments:** `data`, `render`
+**Arguments:** `data`, `render`, `error`
 
-**Must call** `render()` **after modification is done to render the list.**
+⚠️ *Important* ⚠️
+1. Must call `render()` after modification is done to render the list.
+2. Must call `error()` to revert back to original data and render the list.
+3. Parser function is called inside `try/catch` and if an error is caught, original data will be rendered.
 
 **Examples:**
 ```
-function(data, render) {
+function(data, render, error) {
     let names = [];
     data.forEach(function(row) {
         names.push(row.name);
@@ -183,12 +186,17 @@ function(data, render) {
                 }
             });
         });
+        // Render modified data
         render();
+    }).catch(function(e) {
+        console.error(e.message, e.stack);
+        // Render original data instead
+        error();
     });
 }
 ```
 
-### 5. `set_row_background`
+#### 5. `set_row_background`
 
 Function to set the background color of row, (css, hex, rgb, rgba, hsla).
 
@@ -197,9 +205,9 @@ Function to set the background color of row, (css, hex, rgb, rgba, hsla).
 **Return:** `String`, `Null`
 
 **CSS Colors:**
-<div style="width:100%;text-align:center">
+<p align="center">
     <img src="https://github.com/kid1194/frappe-better-list-view/blob/main/images/row_bg.png?raw=true" alt="Frappe Better List View"/>
-</div>
+</p>
 
 **Examples:**
 ```

@@ -1,10 +1,9 @@
-# Frappe Better List View © 2022
+# Frappe Better List View © 2023
 # Author:  Ameen Ahmed
 # Company: Level Up Marketing & Software Development Services
 # Licence: Please refer to LICENSE file
 
 
-from . import __version__ as app_version
 from frappe import __version__ as frappe_version
 
 
