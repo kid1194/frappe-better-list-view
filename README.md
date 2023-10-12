@@ -239,7 +239,7 @@ frappe.listview_settings['DocType'] = {
     // Only 50 rows will be displayed per page
     page_length: 50,
     // List data modify function 
-    parser: function(data, render) {
+    parser: function(data, render, error) {
         let names = [];
         data.forEach(function(row) {
             names.push(row.name);
@@ -261,7 +261,12 @@ frappe.listview_settings['DocType'] = {
                     }
                 });
             });
+            // Render modified data
             render();
+        }).catch(function(e) {
+            console.error(e.message, e.stack);
+            // Render original data instead
+            error();
         });
     },
     set_row_background: function(row) {
