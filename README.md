@@ -1,6 +1,8 @@
 # Frappe Better List View
 
-A small **Frappe** list view plugin that allows the customization.
+A small **Frappe** list view plugin that allows customization.
+
+![v1.4.0](https://img.shields.io/badge/v1.4.0-2024/05/30-green?style=plastic)
 
 ---
 
@@ -10,8 +12,10 @@ A small **Frappe** list view plugin that allows the customization.
   - [Install](#install)
   - [Update](#update)
   - [Uninstall](#uninstall)
-- [Available Options](#available-options)
-- [Example](#example)
+- [Usage](#usage)
+  - [Options](#options)
+  - [Methods](#methods)
+  - [Example](#example)
 - [Issues](#issues)
 - [License](#license)
 
@@ -37,15 +41,11 @@ cd ~/frappe-bench
 
 2. Get plugin from Github
 
-*(Required only once)*
-
 ```
 bench get-app https://github.com/kid1194/frappe-better-list-view
 ```
 
 3. Build plugin
-
-*(Required only once)*
 
 ```
 bench build --app frappe_better_list_view
@@ -57,7 +57,11 @@ bench build --app frappe_better_list_view
 bench --site [sitename] install-app frappe_better_list_view
 ```
 
-5. Check the [Available Options](#available-options) and [Example](#example)
+5. (Optional) Restart bench to clear cache
+
+```
+bench restart
+```
 
 #### Update
 1. Go to app directory
@@ -90,7 +94,7 @@ bench build --app frappe_better_list_view
 bench --site [sitename] migrate
 ```
 
-6. (Optional) Restart bench
+6. (Optional) Restart bench to clear cache
 
 ```
 bench restart
@@ -115,7 +119,7 @@ bench --site [sitename] uninstall-app frappe_better_list_view
 bench remove-app frappe_better_list_view
 ```
 
-4. (Optional) Restart bench
+4. (Optional) Restart bench to clear cache
 
 ```
 bench restart
@@ -123,8 +127,30 @@ bench restart
 
 ---
 
-### Available Options
-#### 1. `query_fields`
+### Usage
+
+#### Options
+##### 1. `status` 🔴
+
+Status object to enable or disable ListView.
+
+**Keys:**
+| Key | Type | Description |
+| :--- | :--- | :--- |
+| `enable` | Boolean | Enabled or didabled.<br /><br />Default: `true` |
+| `message` | String | Disabled message.<br /><br />Default: `ListView is disabled.` |
+| `color` | String | Message text color.<br /><br />Colors: `green`, `blue`, `orange`, `gray`, `red`<br /><br />Default: `red` |
+
+**Example:**
+```
+{
+    enable: false,
+    message: __('ListView is disabled.'),
+    color: 'red'
+}
+```
+
+##### 2. `query_fields`
 
 List of additional fields to fetch but not display.
 
@@ -133,7 +159,7 @@ List of additional fields to fetch but not display.
 ['is_approved', 'is_paid']
 ```
 
-#### 2. `query_filters`
+##### 3. `query_filters`
 
 List of additional filters for the fetch query.
 
@@ -146,7 +172,7 @@ List of additional filters for the fetch query.
 [['is_approved', '=', 1], ['is_paid', '=', 0]]
 ```
 
-#### 3. `page_length`
+##### 4. `page_length`
 
 Number of rows to display per page.
 
@@ -155,16 +181,19 @@ Number of rows to display per page.
 50
 ```
 
-#### 4. `parser`
+##### 5. `parser`
 
 Function to modify the list data before display.
 
-**Arguments:** `data`, `render`, `error`
+**Arguments:**
+| Name | Type | Description |
+| :--- | :--- | :--- |
+| `data` | Array | Data list before display. |
+| `render` | Function | ⚠️ Must be called after data parsing is done to render ListView. |
+| `error` | Function | ⚠️ Must be called when an error is raised to ignore all data modification. |
 
 ⚠️ *Important* ⚠️
-1. Must call `render()` after modification is done to render the list.
-2. Must call `error()` to revert back to original data and render the list.
-3. Parser function is called inside `try/catch` and if an error is caught, original data will be rendered.
+If an error isn't caught inside the parser function, all data modification will be ignored and original data will be rendered automatically instead.
 
 **Examples:**
 ```
@@ -196,15 +225,24 @@ function(data, render, error) {
 }
 ```
 
-#### 5. `set_row_background`
+##### 6. `set_row_background`
 
-Function to set the background color of row, (css, hex, rgb, rgba, hsla).
+Function to set the row background color, (css class, hex, rgb, rgba, hsla).
 
-**Arguments:** `row`
+**Arguments:**
+| Name | Type | Description |
+| :--- | :--- | :--- |
+| `row` | Plain Object | ListView row data object. |
 
-**Return:** `String`, `Null`
 
-**CSS Colors:**
+**Return:**
+| Type | Description |
+| :--- | :--- |
+| `String` | Row background color.<br /><br />Color Type: `CSS Key`, `Hex`, `RGBA` or `HSLA`. |
+| `Null` | No row background color. |
+
+
+**CSS Colors & Keys:**
 <p align="center">
     <img src="https://github.com/kid1194/frappe-better-list-view/blob/main/images/row_bg.png?raw=true" alt="Frappe Better List View"/>
 </p>
@@ -219,26 +257,66 @@ function(row) {
 }
 ```
 
----
+#### Methods
+##### 1. `toggle_status`
 
-### Example
+Method to enable or disable ListView on demand. It can be called from within `onload` event.
+
+**Parameters:**
+| Name | Type | Description |
+| :--- | :--- | :--- |
+| `enable` | Boolean | Enabled or didabled.<br /><br />Default: `true` |
+| `message` | String | Disabled message.<br /><br />Default: `ListView is disabled.` |
+| `color` | String | Message text color.<br /><br />Colors: `green`, `blue`, `orange`, `gray`, `red`<br /><br />Default: `red` |
+
+
+**Example:**
+```
+frappe.listview_settings['DocType'] = {
+    onload: function(listview) {
+        if (!frappe.user_roles.includes('Some Role')) {
+            listview.toggle_status(false, __('ListView is disabled.'), 'red');
+        }
+    }
+};
+```
+
+#### Example
 
 ```
 frappe.listview_settings['DocType'] = {
-    --------------------------------------------------------------------
-    --- Plugin Options -------------------------------------------------
-    --------------------------------------------------------------------
+    /*
+     *---------------------------------------------------
+     *---------- 🔴 Plugin Custom Options 🔴 ------------
+     *---------------------------------------------------
+     */
     
-    // Columns to fetch but not display
+    /*
+     * 1. ListView status
+     */
+    status: {
+        enable: false,
+        message: __('ListView is disabled.'),
+        color: 'red'
+    },
+    /*
+     * 2. Fields to fetch but not display
+     */
     query_fields: ['is_approved', 'is_paid'],
-    // Additional filters (array or object) for fetch query
+    /*
+     * 3. Additional filters (array or object) for fetch query
+     */
     query_filters: {
         is_approved: 1,
         is_paid: 1,
     },
-    // Only 50 rows will be displayed per page
+    /*
+     * 4. Only 50 rows will be displayed per page
+     */
     page_length: 50,
-    // List data modify function 
+    /*
+     * 5. List data modify function
+     */
     parser: function(data, render, error) {
         let names = [];
         data.forEach(function(row) {
@@ -269,13 +347,37 @@ frappe.listview_settings['DocType'] = {
             error();
         });
     },
+    /*
+     * 6. Custom row background color
+     */
     set_row_background: function(row) {
         if (!cint(row.is_approved)) return 'info';
     },
     
-    --------------------------------------------------------------------
     
-    // The fields listed above can be used inside the following functions
+    /*
+     *---------------------------------------------------
+     *-------- 🔵 ListView Options & Events 🔵 ----------
+     *---------------------------------------------------
+     */
+    
+    /*
+     * 1. Onload event
+     *
+     * ListView status can be toggled and changed using
+     * the method "toggle_status" added by the plugin.
+     */
+    onload: function(listview) {
+        if (!frappe.user_roles.includes('Some Role')) {
+            listview.toggle_status(false, __('ListView is disabled.'), 'red');
+        }
+    },
+    /*
+     * 2. Custom indicator method
+     *
+     * Additional fields listed in the "query_fields" option above
+     * are added to the "doc" object and can be accessed directly.
+     */
     get_indicator: function(doc) {
         if (doc.is_paid) {
             return [__('Paid'), 'blue', 'is_paid,=,Yes|is_approved,=,Yes'];
@@ -285,6 +387,12 @@ frappe.listview_settings['DocType'] = {
         }
         return [__('Pending'), 'gray', 'is_paid,=,No|is_approved,=,No'];
     },
+    /*
+     * 2. Column data formatters
+     *
+     * Additional fields listed in the "query_fields" option above
+     * are added to the "doc" object and can be accessed directly.
+     */
     formatters: {
         name: function(value, field, doc) {
             let html = value;
@@ -300,9 +408,9 @@ frappe.listview_settings['DocType'] = {
 ---
 
 ### Issues
-If you find bug in the plugin, please create a [bug report](https://github.com/kid1194/frappe-better-list-view/issues/new?assignees=kid1194&labels=bug&template=bug_report.md&title=%5BBUG%5D) and let us know about it.
+If you find a bug, please create a [bug report](https://github.com/kid1194/frappe-better-list-view/issues/new?assignees=kid1194&labels=bug&template=bug_report.md&title=%5BBUG%5D) and let us know about it.
 
 ---
 
 ### License
-This repository has been released under the [MIT License](https://github.com/kid1194/frappe-better-list-view/blob/main/LICENSE).
+This plugin has been released under the [MIT License](https://github.com/kid1194/frappe-better-list-view/blob/main/LICENSE).

@@ -1,10 +1,10 @@
-# Frappe Better List View © 2023
+# Frappe Better List View © 2024
 # Author:  Ameen Ahmed
 # Company: Level Up Marketing & Software Development Services
 # Licence: Please refer to LICENSE file
 
 
-from frappe import __version__ as frappe_version
+from .version import is_version_gt
 
 
 app_name = "frappe_better_list_view"
@@ -17,14 +17,10 @@ app_email = "kid1194@gmail.com"
 app_license = "MIT"
 
 
-is_frappe_above_v13 = int(frappe_version.split('.')[0]) > 13
-is_frappe_above_v12 = int(frappe_version.split('.')[0]) > 12
-
-
 app_include_js = [
     'better_list_view.bundle.js'
-] if is_frappe_above_v13 else ([
+] if is_version_gt(13) else ([
     '/assets/frappe_better_list_view/js/better_list_view.js'
-] if is_frappe_above_v12 else [
+] if is_version_gt(12) else [
     '/assets/frappe_better_list_view/js/better_list_view_v12.js'
 ])

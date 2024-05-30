@@ -1,11 +1,12 @@
-# Frappe Better List View © 2023
+# Frappe Better List View © 2024
 # Author:  Ameen Ahmed
 # Company: Level Up Marketing & Software Development Services
 # Licence: Please refer to LICENSE file
 
 
 from setuptools import setup, find_packages
-from frappe_better_list_view import __version__ as version
+
+from frappe_better_list_view import __version__
 
 
 with open('requirements.txt') as f:
@@ -14,7 +15,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='frappe_better_list_view',
-    version=version,
+    version=__version__,
     description='Frappe list view plugin that allows modification.',
     author='Ameen Ahmed (Level Up)',
     author_email='kid1194@gmail.com',
