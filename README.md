@@ -137,7 +137,7 @@ Status object to enable or disable ListView.
 **Keys:**
 | Key | Type | Description |
 | :--- | :--- | :--- |
-| `enable` | Boolean | Enabled or didabled.<br /><br />Default: `true` |
+| `enable` | Boolean | Enable or disable.<br /><br />Default: `true` |
 | `message` | String | Disabled message.<br /><br />Default: `ListView is disabled.` |
 | `color` | String | Message text color.<br /><br />Colors: `green`, `blue`, `orange`, `gray`, `red`<br /><br />Default: `red` |
 
@@ -266,7 +266,7 @@ Method to enable or disable ListView on demand. It can be called from within `on
 **Parameters:**
 | Name | Type | Description |
 | :--- | :--- | :--- |
-| `enable` | Boolean | Enabled or didabled.<br /><br />Default: `true` |
+| `enable` | Boolean | Enable or disable.<br /><br />Default: `true` |
 | `message` | String | Disabled message.<br /><br />Default: `ListView is disabled.` |
 | `color` | String | Message text color.<br /><br />Colors: `green`, `blue`, `orange`, `gray`, `red`<br /><br />Default: `red` |
 
