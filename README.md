@@ -170,7 +170,10 @@ List of additional filters for the fetch query.
 ```
 - Array:
 ```
-[['is_approved', '=', 1], ['is_paid', '=', 0]]
+[
+    ['is_approved', '=', 1],
+    ['is_paid', '=', 0]
+]
 ```
 
 ##### 4. `page_length`
