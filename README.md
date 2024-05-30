@@ -175,7 +175,9 @@ List of additional filters for the fetch query.
 
 ##### 4. `page_length`
 
-Number of rows to display per page. Default: `20` - Minimum: `20`;
+Number of rows to display per page.
+- Default: `20`
+- Minimum: `20`
 
 **Example:**
 ```
