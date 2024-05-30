@@ -199,6 +199,7 @@ Function to modify the list data before display.
 | `error` | Function | ⚠️ Must be called when an error is raised to ignore all data modification. |
 
 ⚠️ *Important* ⚠️
+
 If an error isn't caught inside the parser function, all data modification will be ignored and original data will be rendered automatically instead.
 
 **Examples:**
@@ -256,11 +257,12 @@ Function to set the row background color.
 **Examples:**
 ```
 function(row) {
-    if (cint(row.cost) > 1000) return 'danger';
-    if (cint(row.cost) > 800) return '#ffeeba';
-    if (cint(row.cost) > 600) return 'rgb(190,229,235)';
-    if (cint(row.cost) > 400) return 'rgba(190,229,235,1)';
-    if (cint(row.cost) < 200) return 'hsla(133.7,41.2%,83.3%,1)';
+    let cost = cint(row.cost);
+    if (cost > 1000) return 'danger';
+    if (cost > 800) return '#ffeeba';
+    if (cost > 600) return 'rgb(190,229,235)';
+    if (cost > 400) return 'rgba(190,229,235,1)';
+    if (cost < 200) return 'hsla(133.7,41.2%,83.3%,1)';
 }
 ```
 
