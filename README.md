@@ -137,7 +137,7 @@ Status object to enable or disable ListView.
 **Keys:**
 | Key | Type | Description |
 | :--- | :--- | :--- |
-| `enable` | Boolean | Enable or disable.<br /><br />Default: `true` |
+| `enable` | Boolean | Enabled or disabled status.<br /><br />Default: `true` |
 | `message` | String | Disabled message.<br /><br />Default: `ListView is disabled.` |
 | `color` | String | Message text color.<br /><br />Colors: `green`, `blue`, `orange`, `gray`, `red`<br /><br />Default: `red` |
 
@@ -164,17 +164,18 @@ List of additional fields to fetch but not display.
 List of additional filters for the fetch query.
 
 **Example:**
+- Object:
 ```
 {is_approved: 1, is_paid: 0}
 ```
---OR--
+- Array:
 ```
 [['is_approved', '=', 1], ['is_paid', '=', 0]]
 ```
 
 ##### 4. `page_length`
 
-Number of rows to display per page.
+Number of rows to display per page. Default: `20` - Minimum: `20`;
 
 **Example:**
 ```
@@ -266,7 +267,7 @@ Method to enable or disable ListView on demand. It can be called from within `on
 **Parameters:**
 | Name | Type | Description |
 | :--- | :--- | :--- |
-| `enable` | Boolean | Enable or disable.<br /><br />Default: `true` |
+| `enable` | Boolean | Enabled or disabled status.<br /><br />Default: `true` |
 | `message` | String | Disabled message.<br /><br />Default: `ListView is disabled.` |
 | `color` | String | Message text color.<br /><br />Colors: `green`, `blue`, `orange`, `gray`, `red`<br /><br />Default: `red` |
 

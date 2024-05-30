@@ -93,7 +93,7 @@ frappe.views.ListView = class ListView extends frappe.views.ListView {
                 this._add_query_filter(args, i);
             }
         }
-        if (cint(this.settings.page_length) > 0)
+        if (cint(this.settings.page_length) >= 20)
             args.page_length = cint(this.settings.page_length);
         return args;
     }
