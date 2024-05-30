@@ -227,7 +227,7 @@ function(data, render, error) {
 
 ##### 6. `set_row_background`
 
-Function to set the row background color, (css class, hex, rgb, rgba, hsla).
+Function to set the row background color.
 
 **Arguments:**
 | Name | Type | Description |
@@ -238,7 +238,7 @@ Function to set the row background color, (css class, hex, rgb, rgba, hsla).
 **Return:**
 | Type | Description |
 | :--- | :--- |
-| `String` | Row background color.<br /><br />Color Type: `CSS Key`, `Hex`, `RGBA` or `HSLA`. |
+| `String` | Row background color.<br /><br />Color Type: `CSS Key`, `Hex`, `RGB`, `RGBA` or `HSLA`. |
 | `Null` | No row background color. |
 
 
@@ -252,8 +252,9 @@ Function to set the row background color, (css class, hex, rgb, rgba, hsla).
 function(row) {
     if (cint(row.cost) > 1000) return 'danger';
     if (cint(row.cost) > 800) return '#ffeeba';
-    if (cint(row.cost) > 600) return 'rgba(190,229,235,1)';
-    if (cint(row.cost) < 300) return 'hsla(133.7,41.2%,83.3%,1)';
+    if (cint(row.cost) > 600) return 'rgb(190,229,235)';
+    if (cint(row.cost) > 400) return 'rgba(190,229,235,1)';
+    if (cint(row.cost) < 200) return 'hsla(133.7,41.2%,83.3%,1)';
 }
 ```
 
